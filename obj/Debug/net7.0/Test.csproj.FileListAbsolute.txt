@@ -1,0 +1,15 @@
+/Code/Test/obj/Debug/net7.0/Test.csproj.AssemblyReference.cache
+/Code/Test/obj/Debug/net7.0/Test.GeneratedMSBuildEditorConfig.editorconfig
+/Code/Test/obj/Debug/net7.0/Test.AssemblyInfoInputs.cache
+/Code/Test/obj/Debug/net7.0/Test.AssemblyInfo.cs
+/Code/Test/obj/Debug/net7.0/Test.csproj.CoreCompileInputs.cache
+/Code/Test/bin/Debug/net7.0/Test
+/Code/Test/bin/Debug/net7.0/Test.deps.json
+/Code/Test/bin/Debug/net7.0/Test.runtimeconfig.json
+/Code/Test/bin/Debug/net7.0/Test.dll
+/Code/Test/bin/Debug/net7.0/Test.pdb
+/Code/Test/obj/Debug/net7.0/Test.dll
+/Code/Test/obj/Debug/net7.0/refint/Test.dll
+/Code/Test/obj/Debug/net7.0/Test.pdb
+/Code/Test/obj/Debug/net7.0/Test.genruntimeconfig.cache
+/Code/Test/obj/Debug/net7.0/ref/Test.dll
