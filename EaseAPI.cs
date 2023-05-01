@@ -13,19 +13,18 @@ namespace EaseFile
         protected string Логин;
         protected string Пароль;
 
-        public АПИ()
+        public АПИ(bool РежимОтладки = false)
         {
-            Process[] processes = Process.GetProcessesByName("code");
-            foreach (Process process in processes)
-            {
-                process.Kill(); // or process.CloseMainWindow()
-            }
-
 
 
             string[] ФайлКонфигураций = File.ReadAllLines("Setting.txt");
             Логин = ФайлКонфигураций[2];
             Пароль = ФайлКонфигураций[3];
+            if (РежимОтладки)
+            {
+                System.Console.WriteLine(DateTime.Now.ToString() + " " + "Файл Конфигурации: ");
+                System.Console.WriteLine(string.Join('\n', ФайлКонфигураций));
+            }
             СписокБаз = new Dictionary<string, EaseFileBase>();
             ВебСервер = new HttpListener();
             ВебСервер.Prefixes.Add("http://" + ФайлКонфигураций[0] + ":" + ФайлКонфигураций[1] + "/");
@@ -34,10 +33,17 @@ namespace EaseFile
                 СписокБаз.Add(ФайлКонфигураций[shag].Split(' ')[0], new EaseFileBase(ФайлКонфигураций[shag].Split(' ')[1]));
             }
             ВебСервер.Start();
+            if (РежимОтладки)
+            {
+                System.Console.WriteLine(DateTime.Now.ToString() + " " + "Сервер успешно запущен");
+            }
             do
             {
                 HttpListenerContext КонтекстЗапроса = ВебСервер.GetContext();
-                Console.WriteLine(КонтекстЗапроса.Request.HttpMethod);
+                if (РежимОтладки)
+                {
+                    System.Console.WriteLine(DateTime.Now.ToString() + " " + "Поступил запрос");
+                }
                 if (КонтекстЗапроса.Request.HttpMethod == "POST")
                 {
                     byte[] МассивБайтДляЧтенияЗапроса = new byte[1024];
@@ -55,13 +61,24 @@ namespace EaseFile
                             break;
                         }
                     }
+
                     string[] РазобранныйЗапрос = ПодготовительныйРазобранныйЗапрос.ToArray();
+                    if (РежимОтладки)
+                    {
+                        System.Console.WriteLine(DateTime.Now.ToString() + " " + "Пост Запрос: ");
+                        System.Console.WriteLine(string.Join('\n', РазобранныйЗапрос));
+                    }
                     int РазмерЗапроса = UTF8Encoding.UTF8.GetBytes(string.Join(' ', РазобранныйЗапрос)).Length - 1;
                     if (РазобранныйЗапрос.Length >= 3)
                     {
                         // Login Pass base Function
                         if (РазобранныйЗапрос[0] == Логин & РазобранныйЗапрос[1] == Пароль & СписокБаз.ContainsKey(РазобранныйЗапрос[2]))
                         {
+                            if (РежимОтладки)
+                            {
+                                System.Console.WriteLine(DateTime.Now.ToString() + " " + "Запрос: " + РазобранныйЗапрос[3]);
+                              
+                            }
                             switch (РазобранныйЗапрос[3])
                             {
 

@@ -9,8 +9,21 @@ namespace EaseFile // Note: actual namespace depends on the project name.
     {
         static void Main(string[] args)
         {
+            АПИ БетаАПИ;
             Console.WriteLine("Hello World!");
-            АПИ БетаАПИ = new АПИ();
+            if (args.Length >= 1)
+            {
+                if (args[0] == "Debug")
+                {
+                    БетаАПИ = new АПИ(true);
+                }
+            }
+
+            else
+            {
+                БетаАПИ = new АПИ(false);
+            }
+
             // EaseFileBase EaseFile = new EaseFileBase("test.bin");
             // Console.WriteLine(System.Text.UTF8Encoding.UTF8.GetString(EaseFile.СчитатьДанные("123")));
             // EaseFile.ЗаписьДанных("123", File.ReadAllBytes("123.txt"));

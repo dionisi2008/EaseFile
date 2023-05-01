@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2p5p3fECtJ0/DJddbNqyWBRFqM1fauApqIaEUzYhBq36rUGPn/k024/SSwH3lC984YjkvFETliyBd70S0YZU3A==",
+  "dgSpecHash": "eAWQVYeVtG5NNLvdE+h4AlTfFNckp+ne0CIe36l7pblU/WQtKjmyDqyYE1iFt6/1qE2AcgcpL3xtSpPpoMSnQA==",
   "success": true,
-  "projectFilePath": "/Code/Test/Test.csproj",
+  "projectFilePath": "C:\\Users\\dioni\\Documents\\GitHub\\EaseFile\\Test.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
