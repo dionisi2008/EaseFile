@@ -13,18 +13,15 @@ namespace EaseFile
         protected string Логин;
         protected string Пароль;
 
-        public АПИ(bool РежимОтладки = false)
+        public АПИ()
         {
+
+
 
 
             string[] ФайлКонфигураций = File.ReadAllLines("Setting.txt");
             Логин = ФайлКонфигураций[2];
             Пароль = ФайлКонфигураций[3];
-            if (РежимОтладки)
-            {
-                System.Console.WriteLine(DateTime.Now.ToString() + " " + "Файл Конфигурации: ");
-                System.Console.WriteLine(string.Join('\n', ФайлКонфигураций));
-            }
             СписокБаз = new Dictionary<string, EaseFileBase>();
             ВебСервер = new HttpListener();
             ВебСервер.Prefixes.Add("http://" + ФайлКонфигураций[0] + ":" + ФайлКонфигураций[1] + "/");
@@ -33,23 +30,22 @@ namespace EaseFile
                 СписокБаз.Add(ФайлКонфигураций[shag].Split(' ')[0], new EaseFileBase(ФайлКонфигураций[shag].Split(' ')[1]));
             }
             ВебСервер.Start();
-            if (РежимОтладки)
-            {
-                System.Console.WriteLine(DateTime.Now.ToString() + " " + "Сервер успешно запущен");
-            }
             do
             {
                 HttpListenerContext КонтекстЗапроса = ВебСервер.GetContext();
-                if (РежимОтладки)
-                {
-                    System.Console.WriteLine(DateTime.Now.ToString() + " " + "Поступил запрос");
-                }
+        
                 if (КонтекстЗапроса.Request.HttpMethod == "POST")
                 {
+                    Span<byte> БуферСчитанныхБайт = new byte[1073741824];
+                    byte[] МассивСчитанныхБайтВЗавпросе = new byte[КонтекстЗапроса.Request.InputStream.ReadAtLeast(БуферСчитанныхБайт, 1073741824, false)];
+                    Array.Copy(БуферСчитанныхБайт.ToArray(), 0, МассивСчитанныхБайтВЗавпросе, 0, МассивСчитанныхБайтВЗавпросе.Length);
                     byte[] МассивБайтДляЧтенияЗапроса = new byte[1024];
-                    КонтекстЗапроса.Request.InputStream.Read(МассивБайтДляЧтенияЗапроса, 0, 1024);
-                    string[] СыройРазобранныйЗапрос = UTF8Encoding.UTF8.GetString(МассивБайтДляЧтенияЗапроса).Split(' ');
-                    List<string> ПодготовительныйРазобранныйЗапрос = new List<string>();
+                    byte[] ПолезныеДанные = new byte[МассивСчитанныхБайтВЗавпросе.Length - 1024];                    
+                    КонтекстЗапроса.Request.InputStream.Read(МассивСчитанныхБайтВЗавпросе);
+                    Array.Copy(МассивСчитанныхБайтВЗавпросе.ToArray(), 0, МассивБайтДляЧтенияЗапроса, 0, 1024);
+                    Array.Copy(МассивСчитанныхБайтВЗавпросе.ToArray(), 1024, ПолезныеДанные, 0, ПолезныеДанные.Length);
+                    string[] СыройРазобранныйЗапрос = UTF8Encoding.UTF8.GetString(МассивБайтДляЧтенияЗапроса).Split('.')[0].Split(' ');
+                    List<string> ПодготовительныйРазобранныйЗапрос = new List<string>(СыройРазобранныйЗапрос);
                     for (int shag = 0; shag <= СыройРазобранныйЗапрос.Length - 1; shag++)
                     {
                         if (СыройРазобранныйЗапрос[shag] != "")
@@ -61,51 +57,47 @@ namespace EaseFile
                             break;
                         }
                     }
-
                     string[] РазобранныйЗапрос = ПодготовительныйРазобранныйЗапрос.ToArray();
-                    if (РежимОтладки)
-                    {
-                        System.Console.WriteLine(DateTime.Now.ToString() + " " + "Пост Запрос: ");
-                        System.Console.WriteLine(string.Join('\n', РазобранныйЗапрос));
-                    }
                     int РазмерЗапроса = UTF8Encoding.UTF8.GetBytes(string.Join(' ', РазобранныйЗапрос)).Length - 1;
                     if (РазобранныйЗапрос.Length >= 3)
                     {
                         // Login Pass base Function
                         if (РазобранныйЗапрос[0] == Логин & РазобранныйЗапрос[1] == Пароль & СписокБаз.ContainsKey(РазобранныйЗапрос[2]))
                         {
-                            if (РежимОтладки)
-                            {
-                                System.Console.WriteLine(DateTime.Now.ToString() + " " + "Запрос: " + РазобранныйЗапрос[3]);
-                              
-                            }
                             switch (РазобранныйЗапрос[3])
                             {
 
                                 case "ЗаписьДанных":
-                                    // Login Pass base ЗаписьДанных Индификатор ЧислоБайтЗаписываемыхДанных//данные//
-                                    Console.WriteLine(string.Join('\n', РазобранныйЗапрос));
-                                    byte[] МассивСчитанныхДанныхДляЗаписиВБазу = new byte[КонтекстЗапроса.Request.InputStream.Length - РазмерЗапроса];
-                                    КонтекстЗапроса.Request.InputStream.Read(МассивСчитанныхДанныхДляЗаписиВБазу, РазмерЗапроса, МассивСчитанныхДанныхДляЗаписиВБазу.Length);
-                                    this.СписокБаз[РазобранныйЗапрос[2]].ЗаписьДанных(РазобранныйЗапрос[4], МассивСчитанныхДанныхДляЗаписиВБазу.ToArray());
+                                    // Login Pass base ЗаписьДанных Индификатор//данные//
 
+                                    this.СписокБаз[РазобранныйЗапрос[2]].ЗаписьДанных(РазобранныйЗапрос[4], ПолезныеДанные);
+                                    Console.WriteLine(DateTime.Now.ToString() + " ЗаписьДанных");
                                     break;
                                 case "ЗапроситьСписокИндификаторов":
-                                    byte[] ОтветНаЗапрос = System.Text.UTF8Encoding.UTF8.GetBytes(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(string.Join('\n', this.СписокБаз[РазобранныйЗапрос[2]].ЗапроситьСписокИндификаторов()))));
-                                    КонтекстЗапроса.Response.ContentLength64 = ОтветНаЗапрос.Length;
+                                    byte[] ОтветНаЗапрос = System.Text.Encoding.UTF8.GetBytes(string.Join('\n', this.СписокБаз[РазобранныйЗапрос[2]].ЗапроситьСписокИндификаторов()));
                                     КонтекстЗапроса.Response.OutputStream.Write(new ReadOnlySpan<byte>(ОтветНаЗапрос));
+                                    Console.WriteLine(DateTime.Now.ToString() + " ЗапроситьСписокИндификаторов");
                                     break;
-                                case "СчитатьДанные":
-
-                                    Console.WriteLine('\n' + "Start " + DateTime.Now.ToString());
-                                    byte[] ОтветНаЗапросСчитатьДанные = this.СписокБаз[РазобранныйЗапрос[2]].СчитатьДанные(РазобранныйЗапрос[4]);
-                                    Console.WriteLine("Выгрузка из базы: " + DateTime.Now.ToString());
-                                    КонтекстЗапроса.Response.ContentLength64 = ОтветНаЗапросСчитатьДанные.Length;
-                                    Console.WriteLine("Начало Записи: " + DateTime.Now.ToString());
-                                    КонтекстЗапроса.Response.OutputStream.Write(new ReadOnlySpan<byte>(ОтветНаЗапросСчитатьДанные));
-                                    Console.WriteLine("Конец Записи: " + DateTime.Now.ToString());
+                                case "СчитатьДанные":                               
+                                    byte[] ОтветНаЗапросСчитатьДанные = this.СписокБаз[РазобранныйЗапрос[2]].СчитатьДанные(РазобранныйЗапрос[4]);                                    
+                                    КонтекстЗапроса.Response.ContentLength64 = ОтветНаЗапросСчитатьДанные.Length;                                
+                                    КонтекстЗапроса.Response.OutputStream.Write(new ReadOnlySpan<byte>(ОтветНаЗапросСчитатьДанные));                            
                                     КонтекстЗапроса.Response.OutputStream.Close();
+                                    Console.WriteLine(DateTime.Now.ToString() + " СчитатьДанные");
                                     break;
+                                case "ПерезаписатьДанные":
+                                    this.СписокБаз[РазобранныйЗапрос[2]].ПерезаписатьДанные(РазобранныйЗапрос[4], ПолезныеДанные);
+                                    Console.WriteLine(DateTime.Now.ToString() + " ПерезаписатьДанные");
+                                    break;
+                                case "ПереименоватьИндификатор":
+                                    this.СписокБаз[РазобранныйЗапрос[2]].ПереименоватьИндификатор(РазобранныйЗапрос[4], РазобранныйЗапрос[5]);
+                                    Console.WriteLine(DateTime.Now.ToString() + " ПереименоватьИндификатор");
+                                    break;
+                                case "УдалитьДанные":
+                                    this.СписокБаз[РазобранныйЗапрос[2]].УдалитьДанные(РазобранныйЗапрос[4]);
+                                    Console.WriteLine(DateTime.Now.ToString() + " УдалитьДанные");
+                                    break;
+                                    
                             }
 
 
@@ -114,7 +106,7 @@ namespace EaseFile
 
                 }
                 КонтекстЗапроса.Response.Close();
-                Console.WriteLine("Сессия закрыта: " + DateTime.Now.ToString());
+               
             } while (ВебСервер.IsListening == true);
 
 

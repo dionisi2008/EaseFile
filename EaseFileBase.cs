@@ -52,10 +52,12 @@ namespace EaseFile
                     this.КонечныйФайлДляЗаписи.Read(ВременныйКЭШ);
                     this.КонечныйФайлДляЗаписи.Position = this.КонечныйФайлДляЗаписи.Length;
                     ПромежуточныйКЭШ.ЗаписьДанных(ИндификаторДляСчитывания, ВременныйКЭШ.ToArray());
+                    System.Console.WriteLine("Считано из диска.");
                     return ВременныйКЭШ.ToArray();
                 }
                 else
                 {
+                    System.Console.WriteLine("Считано из памяти.");
                     return ДанныеСчитанныеИЗКЭШа;
                 }
 

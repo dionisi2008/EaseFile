@@ -2,5 +2,5 @@
 85
 admin
 12345678
-Base1 base1.bin
+Base1 /mnt/usb/base1.bin
 Base2 base2.bin

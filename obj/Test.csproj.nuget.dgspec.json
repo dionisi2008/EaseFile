@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dioni\\Documents\\GitHub\\EaseFile\\Test.csproj": {}
+    "/Code/Test/Test.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dioni\\Documents\\GitHub\\EaseFile\\Test.csproj": {
+    "/Code/Test/Test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dioni\\Documents\\GitHub\\EaseFile\\Test.csproj",
+        "projectUniqueName": "/Code/Test/Test.csproj",
         "projectName": "Test",
-        "projectPath": "C:\\Users\\dioni\\Documents\\GitHub\\EaseFile\\Test.csproj",
-        "packagesPath": "C:\\Users\\dioni\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dioni\\Documents\\GitHub\\EaseFile\\obj\\",
+        "projectPath": "/Code/Test/Test.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/Code/Test/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\dioni\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -53,7 +53,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/7.0.203/RuntimeIdentifierGraph.json"
         }
       }
     }
