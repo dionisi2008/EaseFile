@@ -1,6 +1,6 @@
 *
-100
+9090
 admin
 12345678
-Base1 base1.bin
-Base2 base2.bin
+Base1 C:\Bolid\base1.bin
+Base2 C:\Bolid\base2.bin
